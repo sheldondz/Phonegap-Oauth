@@ -1,73 +1,9 @@
-Simple phonegap connect scripts for Facebook and Twitter. We wanted to add Facebook and Login functionality into our mobile apps, so have created these 2 scripts which can be easily used as part of phonegap to connect to twitter and facebook.
+Simple phonegap connect scripts for Facebook and Twitter. This enables you to add Facebook and Twitter Login functionality to you phonegap mobile apps.
 
-The scripts created in reference to this tutorial for Twitter connect by 
+Reference Used: 
 Mobile developer soultions - http://www.mobiledevelopersolutions.com/home/start/twominutetutorials/tmt5p1
 
 ChildBrowser plugin needed for Android, Blackberry and Iphone to use these scripts
 Phonegap Plugins - https://github.com/phonegap/phonegap-plugins
 
-Example Usage:
-Include the scripts in your phonegap application after installing ChildBrowser
-<script type="text/javascript" charset="utf-8" src="FBConnect.js"></script>
-<script type="text/javascript" charset="utf-8" src="TwitterConnect.js"></script>
 
-Twitter Example
-var twitterkey = "twitter";  *local storage key for twitter tokens*
-
-$('#twitter_button').live('touchstart', function() {
-		var twitteroptions = { // create an application in twitter and populate the values below
-		        consumerKey: '',
-		        consumerSecret: '',
-		        callbackUrl: '' };
-		var twitter = TwitterConnect.install();
-		twitter.connect(twitteroptions);
-		twitter.onConnect = onTwitterConnected;
-
-});
-
-function onTwitterConnected() {
-	var access_token = JSON.parse(window.localStorage.getItem(window.plugins.twitterConnect.twitterKey));
-	var twitteroptions = { 
-	        consumerKey: '',
-	        consumerSecret: '',
-	        callbackUrl: '' };
-	twitteroptions.accessTokenKey = access_token.accessTokenKey;
-	twitteroptions.accessTokenSecret = access_token.accessTokenSecret;
-	window.plugins.twitterConnect.getUser(twitteroptions);
-	window.plugins.twitterConnect.onConnect = twitter_register;
-}
-
-function twitter_register(  ) {
-	var user = JSON.parse( window.localStorage.getItem('twitter_info'));
-	var access_token = JSON.parse(window.localStorage.getItem(window.plugins.twitterConnect.twitterKey));
-	var oauth_token = access_token.accessTokenKey;
-	//your own application logic to store values in database
-
-}
-
-
-
-Facebook Example 
-var facebookkey = "facebook";   *local storage key for facebook tokens*
-
-$("#facebook_button").live('touchstart', function(){
-	var facebookoptions = {        // create an application in facebook  and populate the values below
-			consumerKey: '',
-			consumerSecret: '',
-		        callbackUrl: 'http://www.facebook.com/connect/login_success.html' }; 
-	var fb = FBConnect.install();
-	fb.connect(facebookoptions);
-	fb.onConnect = onFacebookConnected;
-});
-
-function onFacebookConnected() {
-	var access_token = window.localStorage.getItem(window.plugins.fbConnect.facebookkey);
-	var req = window.plugins.fbConnect.getUser();
-	req.onload = facebook_register;
-}
-
-function facebook_register( data ) {
-	var user = JSON.parse(data.target.responseText);
-	var oauth_token = window.localStorage.getItem(window.plugins.fbConnect.facebookkey);
-	//you own application logic to store user details in database.
-}
