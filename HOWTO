@@ -63,3 +63,47 @@ function facebook_register( data ) {
 	var oauth_token = window.localStorage.getItem(window.plugins.fbConnect.facebookkey);
 	//you own application logic to store user details in database.
 }
+
+Facebook Wall Post Example
+
+$("#facebook_button").live('touchstart', function(){
+	var facebookoptions = {        // create an application in facebook  and populate the values below
+			consumerKey: '',
+			consumerSecret: '',
+		        callbackUrl: 'http://www.facebook.com/connect/login_success.html' }; 
+	var fb = FBConnect.install();
+	fb.connect(facebookoptions);
+	fb.onConnect = onFacebookConnected;
+});
+
+function onFacebookConnected() {
+	var access_token = window.localStorage.getItem(window.plugins.fbConnect.facebookkey);
+	var req = window.plugins.fbConnect.wallPost($("#share_message").val());
+	req.onload = shared;
+}
+
+Twitter Tweet example
+
+$('#twitter_button').live('touchstart', function() {
+		var twitteroptions = { // create an application in twitter and populate the values below
+		        consumerKey: '',
+		        consumerSecret: '',
+		        callbackUrl: '' };
+		var twitter = TwitterConnect.install();
+		twitter.connect(twitteroptions);
+		twitter.onConnect = onTwitterConnected;
+
+});
+
+function onTwitterConnected() {
+	var access_token = JSON.parse(window.localStorage.getItem(window.plugins.twitterConnect.twitterKey));
+	var twitteroptions = { 
+	        consumerKey: '',
+	        consumerSecret: '',
+	        callbackUrl: '' };
+	twitteroptions.accessTokenKey = access_token.accessTokenKey;
+	twitteroptions.accessTokenSecret = access_token.accessTokenSecret;
+	window.plugins.twitterConnect.wallPost(twitteroptions,$("#share_message").val());
+	window.plugins.twitterConnect.onConnect = shared;
+}
+

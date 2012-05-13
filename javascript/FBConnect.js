@@ -6,6 +6,10 @@
 function FBConnect()
 {
 	this.facebookkey = 'facebook';
+	if(window.plugins.childBrowser == null)
+	{
+		ChildBrowser.install();
+	}
 }
 
 FBConnect.prototype.connect = function(options)
@@ -38,15 +42,9 @@ FBConnect.prototype.onLocationChange = function(loc)
         window.plugins.childBrowser.close();
         return;
     }
-    
-    // Same as above, but user went to app's homepage instead
-    // of back to app. Don't close the browser in this case.
-    if (loc === "http://www.facebook.com/connect/login_success.html") {
-        return;
-    }
-    
+        
  // here we get the code
-    if (loc.indexOf("login_success.html#access_token") >= 0) {
+    if (loc.indexOf("access_token") >= 0) {
 
     	var access_token = loc.match(/access_token=(.*)$/)[1];
     	console.log("facebook token" + access_token); 
@@ -62,6 +60,17 @@ FBConnect.prototype.getUser = function()
 	var req = new XMLHttpRequest();
 	
 	req.open("get",url,true);
+	req.send(null);
+	req.onerror = function(){alert("Error");};
+	return req;
+}
+
+FBConnect.prototype.wallPost = function(message)
+{
+	var url = "https://graph.facebook.com/me/feed?access_token=" + window.localStorage.getItem(window.plugins.fbConnect.facebookkey)+"&message="+message;
+	var req = new XMLHttpRequest();
+	
+	req.open("post",url,true);
 	req.send(null);
 	req.onerror = function(){alert("Error");};
 	return req;

@@ -6,6 +6,10 @@
 function TwitterConnect()
 {
 	this.twitterKey = 'twitter';
+	if(window.plugins.childBrowser == null)
+	{
+		ChildBrowser.install();
+	}
 }
 
 TwitterConnect.prototype.connect = function(options)
@@ -97,6 +101,21 @@ TwitterConnect.prototype.getUser = function( options )
             window.localStorage.setItem('twitter_info',data.text);
             console.log("AppLaudLog: screen_name: " + entry.screen_name);
             window.plugins.twitterConnect.onConnect();
+        },
+        function(data) { 
+            alert('Error getting user credentials'); 
+            console.log("AppLaudLog: Error " + data); 
+            $('#oauthStatus').html('<span style="color:red;">Error getting user credentials</span>');
+        }
+    );             
+}
+
+TwitterConnect.prototype.wallPost = function( options, message )
+{
+    oauth = OAuth(options);
+    oauth.post('https://api.twitter.com/1/statuses/update.json',{'status': message,'trim_user' : 'true'},
+        function(data) {
+			window.plugins.twitterConnect.onConnect();
         },
         function(data) { 
             alert('Error getting user credentials'); 
